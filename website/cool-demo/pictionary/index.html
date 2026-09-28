@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Pictionary · Simple Jev</title>
+    <link rel="icon" href="/assets/simple-jev.png" />
+    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="pictionary.css" />
+    <script src="/shared/demo-header.js" defer></script>
+    <script type="module" src="app.js"></script>
+  </head>
+  <body>
+    <simple-jev-demo-header></simple-jev-demo-header>
+    <main class="wrap pictionary-page">
+      <p class="eyebrow">SIMPLE JEV · VISION LAB</p>
+      <h1>Pictionary</h1>
+      <p class="lead">
+        Draw, and the classifier guesses as each stroke lands. Get the target
+        word over the line before the clock gets embarrassing. Absurd mode
+        swaps in things nobody can draw.
+      </p>
+      <div class="pictionary-controls">
+        <div>
+          <span class="control-label" id="level-label">Difficulty</span>
+          <div class="seg" role="group" aria-labelledby="level-label">
+            <button id="lvl-normal" aria-pressed="true">Normal</button
+            ><button id="lvl-absurd" aria-pressed="false">Absurd</button>
+          </div>
+        </div>
+        <div>
+          <span class="control-label" id="mode-label">Mode</span>
+          <div class="seg" role="group" aria-labelledby="mode-label">
+            <button id="mode-game" aria-pressed="true">Game</button
+            ><button id="mode-free" aria-pressed="false">Free draw</button>
+          </div>
+        </div>
+        <div>
+          <label class="control-label" for="model">Vision model</label
+          ><select id="model" disabled>
+            <option>Loading models…</option>
+          </select>
+        </div>
+      </div>
+      <p id="status" role="status" aria-live="polite">Loading models…</p>
+      <p class="limits">
+        No API key · 2k context · 4 RPS. One request at a time: each finished
+        stroke is sent, plus a snapshot while you draw. Only the drawing is
+        sent, and nothing is stored.
+      </p>
+
+      <div class="pictionary-grid">
+        <section class="pictionary-card">
+          <div class="prompt" id="prompt">
+            <div class="prompt-word">Draw: <span id="target">…</span></div>
+            <div class="prompt-timer" id="timer">0.0s</div>
+          </div>
+          <div class="pad">
+            <canvas
+              id="canvas"
+              width="1024"
+              height="1024"
+              aria-label="Drawing canvas"
+            ></canvas>
+            <div class="pad-hint" id="hint">Start drawing</div>
+            <div class="pad-banner" id="banner" hidden></div>
+          </div>
+          <div class="pad-tools">
+            <button id="undo">Undo</button><button id="clear">Clear</button
+            ><button id="skip" class="push">Skip word</button
+            ><button id="next" class="push primary" hidden>Next word</button>
+          </div>
+        </section>
+
+        <section class="pictionary-card" aria-live="polite">
+          <div class="guess-lead" id="lead">Waiting for a sketch…</div>
+          <div class="guess-main">
+            <span class="guess-name" id="g-name">?</span
+            ><span class="guess-pct" id="g-pct"></span>
+          </div>
+          <dl class="guess-meta">
+            <div><dt>Guess</dt><dd id="m-n">–</dd></div>
+            <div><dt>Round trip</dt><dd id="m-rt">–</dd></div>
+            <div><dt>Input tokens</dt><dd id="m-tok">–</dd></div>
+          </dl>
+          <p class="pictionary-label">Top guesses</p>
+          <div class="board" id="board"></div>
+          <p class="words" id="words"></p>
+        </section>
+      </div>
+
+      <details class="response-inspector">
+        <summary>Under the hood · latest response</summary>
+        <pre id="response">Draw something to see the API responses.</pre>
+      </details>
+    </main>
+  </body>
+</html>
