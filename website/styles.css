@@ -1808,6 +1808,34 @@ input:focus-visible {
   font-size: 64px;
   background: #1d2926;
 }
+.pictionary-preview {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 320px;
+  background: white;
+  border-right: 1px solid var(--line);
+}
+.pictionary-preview svg {
+  width: min(70%, 260px);
+  fill: none;
+  stroke: #1d2926;
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.pictionary-chip {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--lime);
+  font-weight: 600;
+}
+.pictionary-chip b {
+  font-family: var(--mono);
+}
 
 .doom-preview {
   min-height: 320px;

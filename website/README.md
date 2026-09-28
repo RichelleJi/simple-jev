@@ -135,6 +135,10 @@ Both 2048 and the driving simulator load `shared/demo-header.js`, providing the 
 
 `/cool-demo/emotion/` reads the visitor's facial expression from their webcam. One 320-pixel still per request carries four questions (emotion choice, valence and energy scores, face-visible Noul). Requests are serial and start at least one second apart; Gemma is the default model. The camera starts only on request and stops on errors or when the page is hidden; frames are not stored. It reuses `cool-demo/vision/queue.mjs` for rate-limit retries. Include `cool-demo/emotion/`, `cool-demo/vision/`, and `shared/` when deploying. See its README for details.
 
+## Pictionary
+
+`/cool-demo/pictionary/` guesses what the visitor draws, live. Each request sends one 384-pixel PNG of the canvas and one choice question over the current level's words: Normal (38 drawable nouns, win at 80%) or Absurd (30 abstract concepts, win at 60%). Game mode adds a target word and timer; Free draw has no target. One request is in flight at a time, and pending requests collapse into one follow-up with the newest drawing. Gemma is the default model. It reuses `cool-demo/vision/queue.mjs` for rate-limit retries. Include `cool-demo/pictionary/`, `cool-demo/vision/`, and `shared/` when deploying. See its README for details.
+
 ## Production deployment
 
 `.github/workflows/deploy-website.yml` publishes to Cloudflare Pages in **Recursal PROD** when `main` receives changes under `website/`, `demos/jevpilot/`, or the deployment workflow. You can also run **Deploy website** manually from GitHub Actions on `main`.
