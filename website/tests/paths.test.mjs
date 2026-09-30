@@ -78,14 +78,13 @@ test("URL prefix rules keep /simple-jev/ working", () => {
       `redirect "${line}" must precede the catch-all rewrite`,
     );
   }
-  // Redirecting .html URLs to extensionless paths loses the prefix, so they
-  // are rewritten in place (200) instead. Every top-level page needs a rule.
+  // Redirect .html URLs to extensionless paths; every top-level page needs a rule.
   for (const entry of readdirSync(websiteRoot)) {
     if (!entry.endsWith(".html")) continue;
-    const target = entry === "index.html" ? "/" : `/${entry.replace(/\.html$/, "")}`;
+    const target = entry === "index.html" ? "/simple-jev/" : `/simple-jev/${entry.replace(/\.html$/, "")}`;
     assert.ok(
-      lines.includes(`/simple-jev/${entry} ${target} 200`),
-      `_redirects must serve /simple-jev/${entry} without a redirect`,
+      lines.includes(`/simple-jev/${entry} ${target} 301`),
+      `_redirects must redirect /simple-jev/${entry} to ${target} with the prefix kept`,
     );
   }
   const demoDirs = readdirSync(join(websiteRoot, "cool-demo"), { withFileTypes: true })
