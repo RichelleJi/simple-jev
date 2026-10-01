@@ -22,8 +22,16 @@ class SimpleJevDemoHeader extends HTMLElement {
         <a class="built-by header-credit" href="https://featherless.ai/" aria-label="Built by Featherless.ai"><span>Built by</span><img src="${local('assets/featherless_logo_dark.svg')}" alt="Featherless.ai" width="120" height="40" /></a>
         <nav aria-label="Main navigation">${links.map(([label,path]) => `<a href="${local(path)}">${label}</a>`).join('')}
           <a class="nav-github" href="https://github.com/featherless-ai/simple-jev">GitHub <span aria-hidden="true">↗</span></a>
+          <a class="nav-cookies" href="#" title="Cookie settings">Cookies</a>
         </nav>
       </header>`;
+    const cookiesLink = root.querySelector(".nav-cookies");
+    if (cookiesLink) {
+      cookiesLink.addEventListener("click", event => {
+        event.preventDefault();
+        if (window.cookiehub) window.cookiehub.openSettings();
+      });
+    }
     this.addEventListener('keydown', event => event.stopPropagation());
     this.addEventListener('keyup', event => event.stopPropagation());
     const { setupHeader } = await import(new URL('header.js', sharedHeaderBase));

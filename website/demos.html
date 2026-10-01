@@ -1,8 +1,14 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <!-- CookieHub consent management -->
-    <script src="https://cdn.cookiehub.eu/c2/65d105e9.js" async></script>
+    <!-- CookieHub consent: sync load + explicit init, matching featherless.ai. -->
+    <script src="https://cdn.cookiehub.eu/c2/65d105e9.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function (event) {
+        var cpm = {};
+        window.cookiehub.load(cpm);
+      });
+    </script>
     <!-- Google Tag Manager -->
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -309,7 +315,8 @@
       <div>
         <a href="https://github.com/featherless-ai/simple-jev"
           >Source & docs ↗</a
-        ><a href="https://featherless.ai/">Featherless ↗</a>
+        ><a href="https://featherless.ai/">Featherless ↗</a
+        ><a href="https://featherless.ai/legal/privacy-policy">Privacy ↗</a>
       </div>
     </footer>
   </body>

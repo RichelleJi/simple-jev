@@ -1,8 +1,14 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <!-- CookieHub consent management -->
-  <script src="https://cdn.cookiehub.eu/c2/65d105e9.js" async></script>
+  <!-- CookieHub consent: sync load + explicit init, matching featherless.ai. -->
+  <script src="https://cdn.cookiehub.eu/c2/65d105e9.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function (event) {
+      var cpm = {};
+      window.cookiehub.load(cpm);
+    });
+  </script>
   <!-- Google Tag Manager -->
   <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
   new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -145,7 +151,7 @@
       </div>
     </details>
     <noscript><p class="eval-notes">JavaScript is required for interactive scores and examples. Download the <a href="assets/evaluations/results.json">evaluation snapshot</a> to inspect the data without JavaScript.</p></noscript>
-    <footer class="eval-footer"><a href="index.html">← Simple Jev</a><a href="playground.html">Try your own questions →</a></footer>
+    <footer class="eval-footer"><a href="index.html">← Simple Jev</a><a href="playground.html">Try your own questions →</a><a href="https://featherless.ai/legal/privacy-policy">Privacy ↗</a></footer>
   </main>
 </body>
 </html>
