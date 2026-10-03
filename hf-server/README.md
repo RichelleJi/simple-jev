@@ -32,6 +32,46 @@ Choose a context limit supported by the model. CPU testing can use
 `--device cpu --dtype float32`. Model IDs from Hugging Face are also accepted;
 a local model directory avoids downloading weights again.
 
+## Cloudflare CLEF and CLEF-Flash
+
+Use the native backend for both releases. It loads the backbone **and trained joint
+schema head**, using Cloudflare's released encoding/scoring implementation rather
+than the generic classifier prompt policies:
+
+```bash
+simple-jev --backend clef --model Cloudflare/clef-flash --device cuda --dtype bfloat16 --max-model-len 16384
+# Larger model (requires more accelerator memory):
+simple-jev --backend clef --model Cloudflare/clef --device cuda --dtype bfloat16 --max-model-len 16384
+```
+
+CLEF-Flash is 9B; CLEF is 27B. The backend defaults to pinned releases (see
+`hf_clef.REVISIONS`); `--revision` overrides the weights revision. A local complete
+release directory also works. No downloaded Python code is executed: the shared
+Apache-2.0 reference implementation is included in `clef_native/` with provenance.
+
+Both `/v1/classifier` and `/v1/systemone` accept the existing request schema:
+text/JSON `state`, or `messages` with text and user `image_url` blocks. Images use
+our existing bounded decoder and image resizing controls. Chat turns are serialized
+as role/content evidence in the native state; images are supplied in encounter
+order and referenced by a one-based `image_index`. Video and Cloudflare's separate
+top-level media fields are not part of this server's request contract.
+
+CLEF evaluates all questions jointly in one forward pass. Noul returns its native
+probability of true; Score returns the expected rubric index. There is no sampled
+text, so `usage.output_tokens` is zero. Input usage counts the complete joint
+sequence once. Overlong requests are rejected, never silently truncated. The
+configured context limit may be up to 65,536 tokens; memory requirements still
+apply. Requests are serialized, and cancellation prevents queued work from starting
+but cannot interrupt an in-progress PyTorch forward.
+
+Prompt-policy overrides, RoPE scaling, tools, custom processor kwargs and raw-logit
+diagnostics are unsupported for this backend. Suffix batching settings apply only
+to the Transformers backend. CLEF uses one device; `auto` chooses CUDA when
+available, otherwise CPU. For CPU tests use `--dtype float32`.
+
+Sources: [CLEF](https://huggingface.co/Cloudflare/clef),
+[CLEF-Flash](https://huggingface.co/Cloudflare/clef-flash).
+
 ## API
 
 See the [complete HTTP API reference](API_REFERENCE.md) for all request fields,

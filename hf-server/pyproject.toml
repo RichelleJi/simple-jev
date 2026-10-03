@@ -22,8 +22,8 @@ test = ["pytest", "pytest-asyncio", "httpx"]
 # Include the shared modules in an HF wheel without introducing a separate
 # common distribution. Build/install from a checkout containing both folders.
 [tool.setuptools]
-py-modules = ["hf_server", "hf_prompt_policies", "hf_vision", "hf_media"]
-packages = ["common"]
+py-modules = ["hf_server", "hf_prompt_policies", "hf_vision", "hf_media", "hf_clef"]
+packages = ["common", "clef_native"]
 package-dir = {"" = ".", common = "../common"}
 
 # Resolve source imports from the repository root and this server directory.
@@ -32,3 +32,6 @@ package-dir = {"" = ".", common = "../common"}
 testpaths = ["tests"]
 asyncio_mode = "auto"
 pythonpath = ["..", "."]
+
+[tool.setuptools.package-data]
+clef_native = ["LICENSE", "NOTICE"]

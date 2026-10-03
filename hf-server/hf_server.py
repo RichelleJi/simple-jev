@@ -909,8 +909,8 @@ class DecisionService:
                     if self.advanced_metrics:
                         response["metadata"] = {
                             **self.metadata,
-                            "format": "laya-native",
-                            "usage_accounting": "sum_of_question_sequence_tokens",
+                            "format": getattr(self.backend, "native_format", "laya-native"),
+                            "usage_accounting": getattr(self.backend, "usage_accounting", "sum_of_question_sequence_tokens"),
                         }
                         response["metrics"] = {
                             "queue_seconds": queued,
@@ -1155,6 +1155,20 @@ def load_service(
     if served_model_name is not None and not served_model_name.strip():
         raise ValueError("served_model_name must not be empty")
     public_model = served_model_name if served_model_name is not None else model_name
+    if backend == "clef":
+        if prompt_policy is not None or subfolder or rope_factor != 1:
+            raise ValueError('CLEF uses its native schema head; prompt policies, subfolder and rope scaling are unsupported')
+        from hf_clef import load_clef
+        native, resolved_revision = load_clef(
+            model_name, revision=revision, device=device, dtype=dtype, max_tokens=max_model_len,
+            max_image_width=max_image_width, max_image_height=max_image_height,
+            default_image_max_width=default_image_max_width,
+            default_image_max_height=default_image_max_height)
+        return DecisionService(
+            public_model, None, native, enforce_model_id=enforce_model_id,
+            max_choice_options=max_choice_options, concurrency=1,
+            max_request_branches=max_request_branches,
+            metadata={'backend': 'clef', 'model_revision': resolved_revision})
     if backend == "laya" and prompt_policy not in (None, "baseline"):
         raise ValueError("Prompt policies apply only to --backend transformers; Laya uses native formatting")
     if backend == "laya":
@@ -1202,6 +1216,10 @@ def load_service(
                 "native_sequence_limit": agent.cfg["max_len"],
             },
         )
+    if backend == "transformers":
+        from hf_clef import REVISIONS
+        if model_name in REVISIONS or (Path(model_name) / 'joint_head_config.json').is_file():
+            raise ValueError('CLEF checkpoints require --backend clef to load their trained joint schema head')
     if backend != "transformers":
         raise ValueError(f"Unknown backend: {backend}")
     if subfolder:
@@ -1297,7 +1315,7 @@ def main():
         help="Explicit format override; omitted: match known architecture/size, otherwise warn and use baseline. Named policies require state",
     )
     parser.add_argument(
-        "--backend", choices=["transformers", "laya"], default="transformers"
+        "--backend", choices=["transformers", "laya", "clef"], default="transformers"
     )
     parser.add_argument(
         "--subfolder", help="Laya checkpoint subfolder, e.g. multilingual"

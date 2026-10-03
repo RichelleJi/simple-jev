@@ -461,3 +461,14 @@ rating/choice labels; arbitrary HF models are not guaranteed to work.
 - [Request schema](../common/request_schema.py)
 - [HF server: chat rendering, inference, service, HTTP routes, and CLI](hf_server.py)
 - [Scoring formulas](../common/response_scoring.py)
+
+## Native CLEF backend
+
+`--backend clef --model Cloudflare/clef` and
+`--backend clef --model Cloudflare/clef-flash` serve the same classifier and
+SystemOne routes using the released joint schema head. See the
+[CLEF setup and limitations](README.md#cloudflare-clef-and-clef-flash).
+Noul is a native binary probability; input usage counts one joint sequence and
+output usage is zero. Text/JSON state and text/image messages are supported;
+context overflow is rejected rather than truncated. Prompt policies and RoPE
+scaling do not apply.
