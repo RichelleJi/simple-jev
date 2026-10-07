@@ -141,7 +141,7 @@ Both 2048 and the driving simulator load `shared/demo-header.js`, providing the 
 
 ## SF Tech Week Signal
 
-`/cool-demo/sf-tech-week-signal/` includes the October 5–11, 2026 San Francisco calendar snapshot and classifies the full 1,593-event dataset in live batches. It uses the Simple Jev public classifier API. Server-side Pages Functions enforce three full runs per client IP per UTC day, bind batches to the originating run/IP, and store only salted daily IP fingerprints in D1 for 30 days. See `demos/sf-tech-week-signal/README.md` for local setup, data provenance, and the D1 binding/secret required before the deployed demo can classify events.
+`/cool-demo/sf-tech-week-signal/` includes the October 5–11, 2026 San Francisco calendar snapshot and classifies the full 1,593-event dataset in live batches. It uses the Simple Jev public classifier API. Server-side Pages Functions bind batches to the originating run/IP; the site does not impose a daily run-count limit. The classifier API may enforce its own limits. See `demos/sf-tech-week-signal/README.md` for local setup, data provenance, and the D1 binding/secret required before the deployed demo can classify events.
 
 ## Production deployment
 

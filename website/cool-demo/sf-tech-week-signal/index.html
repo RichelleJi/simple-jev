@@ -33,7 +33,7 @@
                 <section class="run-config" aria-label="Classification configuration">
                   <label><span>Event source</span><input id="sourceUrl" value="https://www.tech-week.com/calendar/sf"></label>
                 </section>
-                <p class="secure-line">Three full classification runs per IP each UTC day. Every run covers the complete event list.</p>
+                <p class="secure-line">Every run classifies the complete event list. API-side limits may apply.</p>
               </div>
             </details>
             <button class="btn primary" id="runBtn">Run <span>↗</span></button>
@@ -124,7 +124,6 @@
   </main>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <script src="data/mcp-events.js"></script>
-  <script src="app.js"></script>
+  <script src="load-events.js"></script>
 </body>
 </html>

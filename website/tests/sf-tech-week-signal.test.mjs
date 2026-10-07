@@ -57,14 +57,8 @@ function fakeEnv() {
               async first() {
                 if (sql.includes('INSERT INTO sf_signal_runs')) {
                   const [id, ipHash, quotaDay, model, totalEvents, startedAt] = values;
-                  const currentCount = runs.filter((run) => run.ipHash === ipHash && run.quotaDay === quotaDay).length;
-                  if (currentCount >= 3) return null;
                   runs.push({ id, ipHash, quotaDay, model, totalEvents, startedAt });
                   return { id };
-                }
-                if (sql.includes('SELECT COUNT(*) AS count')) {
-                  const [ipHash, quotaDay] = values;
-                  return { count: runs.filter((run) => run.ipHash === ipHash && run.quotaDay === quotaDay).length };
                 }
                 return null;
               },
@@ -85,20 +79,12 @@ function startRequest(ip = '203.0.113.10') {
   });
 }
 
-test('allows three full-run starts per IP per UTC day, then responds 429', async () => {
+test('allows repeated full-run starts from the same IP without a site-side daily cap', async () => {
   const env = fakeEnv();
   const responses = await Promise.all(Array.from({ length: 8 }, () => onRequestPost({ request: startRequest(), env })));
-  assert.equal(responses.filter((response) => response.status === 200).length, 3);
-  assert.equal(responses.filter((response) => response.status === 429).length, 5);
-  assert.ok(Number(responses.find((response) => response.status === 429).headers.get('retry-after')) > 0);
-  assert.equal(env.runs.length, 3);
-});
-
-test('keeps the daily allowance separate for different IPs', async () => {
-  const env = fakeEnv();
-  for (let i = 0; i < 3; i++) await onRequestPost({ request: startRequest('203.0.113.10'), env });
-  const response = await onRequestPost({ request: startRequest('203.0.113.11'), env });
-  assert.equal(response.status, 200);
+  assert.ok(responses.every((response) => response.status === 200));
+  assert.equal(env.runs.length, 8);
+  assert.ok((await responses[0].json()).runs_remaining === undefined);
 });
 
 test('allows each listed classifier model and rejects unknown model IDs', async () => {
