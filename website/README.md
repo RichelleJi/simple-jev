@@ -141,15 +141,15 @@ Both 2048 and the driving simulator load `shared/demo-header.js`, providing the 
 
 ## SF Tech Week Signal
 
-`/cool-demo/sf-tech-week-signal/` includes the October 5–11, 2026 San Francisco calendar snapshot and classifies the full 1,593-event dataset in live batches. It uses the Simple Jev public classifier API. Server-side Pages Functions bind batches to the originating run/IP; the site does not impose a daily run-count limit. The classifier API may enforce its own limits. See `demos/sf-tech-week-signal/README.md` for local setup, data provenance, and the D1 binding/secret required before the deployed demo can classify events.
+`/cool-demo/sf-tech-week-signal/` includes the October 5–11, 2026 San Francisco calendar snapshot and classifies the full 1,593-event dataset in live batches. The browser calls the public Simple Jev classifier API directly; no API key, server function, database, or site-side per-IP run cap is required. The API enforces its own usage limits. See `demos/sf-tech-week-signal/README.md` for local setup and data provenance.
 
 ## Production deployment
 
-`.github/workflows/deploy-website.yml` publishes to Cloudflare Pages in **Recursal PROD** when `main` receives changes under `website/`, `demos/jevpilot/`, `demos/sf-tech-week-signal/`, or the deployment workflow. It runs Wrangler from `website/` so the Pages Functions are included. You can also run **Deploy website** manually from GitHub Actions on `main`.
+`.github/workflows/deploy-website.yml` publishes the static site to Cloudflare Pages in **Recursal PROD** when `main` receives changes under `website/`, `demos/jevpilot/`, `demos/sf-tech-week-signal/`, or the deployment workflow. You can also run **Deploy website** manually from GitHub Actions on `main`.
 
 Configure the repository Actions secret `CLOUDFLARE_API_TOKEN` with **Account → Cloudflare Pages → Edit**, restricted to Recursal PROD. The workflow supplies the PROD account ID and deploys to the `simple-jev` project (`https://simple-jev-6i4.pages.dev`). DNS and custom domains are managed separately; deployments update the existing project.
 
-The workflow installs locked dependencies, runs website tests and the driving API adapter tests, rebuilds the driving simulator, and stages the website without tests or README files. The deployment token is supplied only to the upload step. No local Cloudflare login is required by CI.
+The workflow installs locked dependencies, runs website tests and the driving API adapter tests, rebuilds the driving simulator, and stages the static website without tests or README files. The deployment token is supplied only to the upload step. No local Cloudflare login is required by CI.
 
 ## DOOM autoplay
 

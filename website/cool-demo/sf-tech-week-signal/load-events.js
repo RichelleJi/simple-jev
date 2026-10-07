@@ -4,6 +4,7 @@
     if (!response.ok) throw new Error(`Event catalog request failed (${response.status})`);
     window.SF_TECH_WEEK_EVENTS = await response.json();
     const app = document.createElement('script');
+    app.type = 'module';
     app.src = './app.js';
     document.body.appendChild(app);
   } catch (error) {
