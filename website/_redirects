@@ -26,6 +26,7 @@
 /simple-jev/cool-demo/doom /simple-jev/cool-demo/doom/ 301
 /simple-jev/cool-demo/emotion /simple-jev/cool-demo/emotion/ 301
 /simple-jev/cool-demo/pictionary /simple-jev/cool-demo/pictionary/ 301
+/simple-jev/cool-demo/sf-tech-week-signal /simple-jev/cool-demo/sf-tech-week-signal/ 301
 
 # Everything else under the prefix serves the site unchanged.
 /simple-jev/* /:splat 200

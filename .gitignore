@@ -1,4 +1,9 @@
 .*
+website/.dev.vars
+website/.dev.vars.*
+!website/.dev.vars.example
+website/wrangler.jsonc
+website/.wrangler/
 
 # Ignore agentic AI jounrals
 JOURNAL.md
