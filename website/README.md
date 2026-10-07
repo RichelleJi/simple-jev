@@ -139,9 +139,13 @@ Both 2048 and the driving simulator load `shared/demo-header.js`, providing the 
 
 `/cool-demo/pictionary/` guesses what the visitor draws, live. Each request sends one 384-pixel PNG of the canvas and one choice question over the current level's words: Normal (38 drawable nouns, win at 80%) or Absurd (30 abstract concepts, win at 60%). Game mode adds a target word and timer; Free draw has no target. One request is in flight at a time, and pending requests collapse into one follow-up with the newest drawing. Gemma is the default model. It reuses `cool-demo/vision/queue.mjs` for rate-limit retries. Include `cool-demo/pictionary/`, `cool-demo/vision/`, and `shared/` when deploying. See its README for details.
 
+## SF Tech Week Signal
+
+`/cool-demo/sf-tech-week-signal/` includes the October 5–11, 2026 San Francisco calendar snapshot and classifies the full 1,593-event dataset in live batches. It uses the Simple Jev public classifier API. Server-side Pages Functions enforce three full runs per client IP per UTC day, bind batches to the originating run/IP, and store only salted daily IP fingerprints in D1 for 30 days. See `demos/sf-tech-week-signal/README.md` for local setup, data provenance, and the D1 binding/secret required before the deployed demo can classify events.
+
 ## Production deployment
 
-`.github/workflows/deploy-website.yml` publishes to Cloudflare Pages in **Recursal PROD** when `main` receives changes under `website/`, `demos/jevpilot/`, or the deployment workflow. You can also run **Deploy website** manually from GitHub Actions on `main`.
+`.github/workflows/deploy-website.yml` publishes to Cloudflare Pages in **Recursal PROD** when `main` receives changes under `website/`, `demos/jevpilot/`, `demos/sf-tech-week-signal/`, or the deployment workflow. It runs Wrangler from `website/` so the Pages Functions are included. You can also run **Deploy website** manually from GitHub Actions on `main`.
 
 Configure the repository Actions secret `CLOUDFLARE_API_TOKEN` with **Account → Cloudflare Pages → Edit**, restricted to Recursal PROD. The workflow supplies the PROD account ID and deploys to the `simple-jev` project (`https://simple-jev-6i4.pages.dev`). DNS and custom domains are managed separately; deployments update the existing project.
 

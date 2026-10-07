@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <!-- CookieHub consent: sync load + explicit init, matching featherless.ai. -->
+  <script src="https://cdn.cookiehub.eu/c2/65d105e9.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function (event) {
+      var cpm = {};
+      window.cookiehub.load(cpm);
+    });
+  </script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Classify SF Tech Week 2026 events by audience fit, networking value, and signal quality.">
+  <title>Signal / SF Tech Week 2026</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23f6ff58'/%3E%3Cpath d='M7 21h4l3-11 4 15 3-9h4' fill='none' stroke='%230b0d10' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+  <script src="../../shared/demo-header.js" defer></script>
+</head>
+<body>
+  <simple-jev-demo-header></simple-jev-demo-header>
+  <aside class="sidebar">
+    <div class="sidebar-menus">
+      <details class="sidebar-menu" open>
+        <summary><span>◎</span> Classification</summary>
+        <div class="sidebar-menu-body run-actions">
+          <label class="model-switch" for="modelSelect"><span><b>MODEL IN USE</b><small>on Simple Jev</small></span><select id="modelSelect" aria-label="Simple Jev classifier model"><option value="featherless-ai/Qwen3.6-35B-A3B-classifier">Qwen3.6 · 35B-A3B ($0.28)</option><option value="featherless-ai/Qwen3.8-27B-classifier" selected>Qwen3.8 · 27B ($0.30)</option><option value="featherless-ai/Qwen3.5-4B-classifier">Qwen3.5 · 4B ($0.03)</option><option value="featherless-ai/gemma-4-26B-A4B-classifier">Gemma 4 · 26B-A4B ($0.28)</option><option value="featherless-ai/gemma-4-12B-it-classifier">Gemma 4 · 12B-it (price n/a)</option><option value="featherless-ai/RWKV-std-classifier">RWKV · std ($0.20 · text only)</option><option value="featherless-ai/RWKV-mid-classifier">RWKV · mid ($0.10 · text only)</option><option value="featherless-ai/RWKV-small-classifier">RWKV · small (price n/a · text only)</option></select></label>
+          <div class="run-control-row">
+            <details class="config-dropdown">
+              <summary>Config <span>⌄</span></summary>
+              <div class="config-menu">
+                <div class="config-current" id="configCurrent">SF calendar · Qwen3.8</div>
+                <section class="run-config" aria-label="Classification configuration">
+                  <label><span>Event source</span><input id="sourceUrl" value="https://www.tech-week.com/calendar/sf"></label>
+                </section>
+                <p class="secure-line">Three full classification runs per IP each UTC day. Every run covers the complete event list.</p>
+              </div>
+            </details>
+            <button class="btn primary" id="runBtn">Run <span>↗</span></button>
+          </div>
+        </div>
+      </details>
+      <details class="sidebar-menu sidebar-live" id="criteria" open>
+        <summary><span>◉</span> Status</summary>
+        <div class="sidebar-menu-body">
+          <section class="live-processing" id="runPanel" aria-live="polite">
+            <div class="processed-bar"><div class="processed-meta"><span>PROCESSED <strong id="processedCount">0 / 0</strong></span><span><span class="runner-state" id="runState">READY</span> <b id="runDetail">0%</b></span></div><div class="progress-track"><i id="runProgress"></i></div></div>
+            <div class="token-meter">
+              <div class="token-total"><span>TOTAL TOKENS</span><strong id="totalTokens">0</strong></div>
+              <div class="token-track" aria-label="Input and output token usage"><i class="token-in" id="tokenInBar"></i><i class="token-out" id="tokenOutBar"></i></div>
+              <div class="token-legend"><span><i class="token-in"></i>Tokens in <b id="inputTokens">0</b></span><span><i class="token-out"></i>Tokens out <b id="outputTokens">0</b></span></div>
+            </div>
+            <div class="model-activity"><span class="activity-pulse"></span><div><small>MODEL ACTIVITY</small><strong id="runStatus">Waiting for a run</strong><p id="modelActivity">Ready.</p></div></div>
+            <section class="dev-latency" id="devLatency" hidden aria-label="Developer latency telemetry">
+              <div class="dev-latency-head"><span>DEV LATENCY</span><b>MODEL ENDPOINT</b></div>
+              <div class="dev-latency-grid"><span>AVG RTT<strong id="latencyAvg">—</strong></span><span>P95 RTT<strong id="latencyP95">—</strong></span><span>LATEST<strong id="latencyLatest">—</strong></span><span>THROUGHPUT<strong id="latencyThroughput">—</strong></span></div>
+              <p>Measured server-to-model round-trip time.</p>
+            </section>
+            <div class="live-portfolio">
+              <div class="portfolio-live-head"><h3>Signal mix</h3><small>Rendering live</small></div>
+              <div class="donut-wrap"><div class="donut live-donut" id="liveMixPie" role="img" aria-label="No events classified yet"><div><strong id="liveMixTotal">0</strong><span>TAGS</span></div></div><div class="legend"><span data-mix-signal="Investor access"><i class="c-investor"></i>Investor access <b id="mixInvestor">0</b></span><span data-mix-signal="Engineer talent"><i class="c-hiring"></i>Engineer talent <b id="mixEngineer">0</b></span><span data-mix-signal="Research talent"><i class="c-research"></i>Research talent <b id="mixResearch">0</b></span><span data-mix-signal="Looking for a job"><i class="c-jobs"></i>Looking for a job <b id="mixJobs">0</b></span><span data-mix-signal="Sales pitch / noise"><i class="c-noise"></i>Sales pitch / noise <b id="mixNoise">0</b></span></div></div>
+            </div>
+          </section>
+        </div>
+      </details>
+      <details class="sidebar-menu sidebar-rubric rubric-pane" id="rubric">
+        <summary><span>≋</span> Rubric</summary>
+        <div class="sidebar-menu-body"><div class="rubric-editor-head"><p>Adjust the importance of each fixed rubric criterion.</p><button class="rubric-reset" id="resetRubricBtn" type="button">Reset</button></div><div class="criteria-grid" id="criteriaGrid"></div></div>
+      </details>
+    </div>
+  </aside>
+
+  <main>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">EVENT INTELLIGENCE / 2026</p>
+        <div class="title-lockup"><h1>SF Tech Week <span>Signal</span></h1><span class="featherless-by">by <a href="https://featherless.ai/" target="_blank" rel="noreferrer"><strong>Featherless.ai</strong></a> <i>✦</i></span></div>
+      </div>
+      <a class="github-button" href="https://github.com/featherless-ai/simple-jev" target="_blank" rel="noreferrer" aria-label="View Simple Jev on GitHub">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3v3a3 3 0 0 0 3 3h2a3 3 0 0 1 3 3v3m0 0-3-3m3 3 3-3M8 21v-4a3 3 0 0 1 3-3h1M8 3 5 6m3-3 3 3"/></svg>
+        <span>Simple Jev</span><b>↗</b>
+      </a>
+    </header>
+
+    <div class="view" id="events">
+      <section class="view-heading">
+        <div><p class="eyebrow">SOURCE SNAPSHOT / OCT 5–11</p><h2>All events</h2></div>
+        <div class="event-tools"><div class="data-access"><span>1,593 SF Tech Week events</span><a href="data/mcp-events.json" download>JSON</a></div><div class="search-wrap"><span>⌕</span><input id="eventSearch" type="search" placeholder="Search event or host…" aria-label="Search events"></div></div>
+      </section>
+      <div class="filter-row" id="signalFilters">
+        <button class="chip active" data-signal="all">All <b>1,593</b></button>
+        <button class="chip" data-signal="Investor access">Investor access</button>
+        <button class="chip" data-signal="Engineer talent">Engineer talent</button>
+        <button class="chip" data-signal="Research talent">Research talent</button>
+        <button class="chip" data-signal="Looking for a job">Looking for a job</button>
+        <button class="chip" data-signal="Sales pitch / noise">Sales pitch / noise</button>
+      </div>
+      <p class="signal-tag-note">Events can carry multiple signal tags. Extra tags appear when the model assigns at least 25% probability.</p>
+        <section class="panel event-table-panel">
+        <div class="table-wrap"><table><thead><tr><th>Time</th><th>Event / host</th><th>Signal tags</th><th>Best for</th><th>Vibe</th><th>Verdict</th></tr></thead><tbody id="allEventRows"></tbody></table></div>
+        <div class="empty-state" id="eventEmpty" hidden>No events match this filter.</div>
+      </section>
+    </div>
+
+    <div class="view active" id="overview">
+    <section class="workspace-grid shortlist-only">
+      <article class="panel recommendations">
+        <div class="panel-head">
+          <div><p class="eyebrow">CURATED SHORTLIST</p><h2>Worth your calendar</h2></div>
+          <select id="personaSelect" aria-label="Select attendee persona">
+            <option value="founder">Founder raising</option>
+            <option value="jobseeker">Looking for a job</option>
+            <option value="engineer">Engineer networking</option>
+            <option value="researcher">Researcher</option>
+          </select>
+        </div>
+        <div id="recommendationList" class="recommendation-list"></div>
+      </article>
+
+    </section>
+
+    </div>
+
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="data/mcp-events.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

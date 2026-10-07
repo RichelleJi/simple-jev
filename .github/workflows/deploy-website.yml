@@ -6,6 +6,7 @@ on:
     paths:
       - 'website/**'
       - 'demos/jevpilot/**'
+      - 'demos/sf-tech-week-signal/**'
       - '.github/workflows/deploy-website.yml'
   workflow_dispatch:
 
@@ -40,7 +41,7 @@ jobs:
       - name: Stage public website
         run: |
           mkdir -p "$RUNNER_TEMP/simple-jev-site"
-          rsync -a --exclude=tests --exclude=README.md --exclude=.DS_Store website/ "$RUNNER_TEMP/simple-jev-site/"
+          rsync -a --exclude=tests --exclude=README.md --exclude=.DS_Store --exclude=functions website/ "$RUNNER_TEMP/simple-jev-site/"
       - name: Deploy to Recursal PROD
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -50,4 +51,5 @@ jobs:
             echo 'Missing GitHub Actions secret: CLOUDFLARE_API_TOKEN'
             exit 1
           fi
+          cd website
           npx --yes wrangler@4.135.0 pages deploy "$RUNNER_TEMP/simple-jev-site" --project-name simple-jev --branch main
