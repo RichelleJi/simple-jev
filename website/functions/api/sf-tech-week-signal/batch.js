@@ -53,7 +53,7 @@ export async function onRequestPost({ request, env }) {
     return json({ error: 'Batches must be submitted once, sequentially, within the full run' }, 409);
   }
 
-  // Claim the exact next batch before making a paid inference request. Duplicate or
+  // Claim the exact next batch before making an inference request. Duplicate or
   // parallel submissions for the same offset cannot both reach the model endpoint.
   const claim = await env.SF_SIGNAL_DB.prepare(`
     UPDATE sf_signal_runs SET status = 'processing'

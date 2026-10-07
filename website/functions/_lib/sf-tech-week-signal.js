@@ -10,7 +10,6 @@ const SUPPORTED_MODELS = [
   'featherless-ai/RWKV-small-classifier',
 ];
 const ENDPOINT = 'https://simple-jev-demo-api.featherless.ai/v1/classifier';
-const MAX_RUNS_PER_IP_PER_DAY = 3;
 const MAX_BATCH_SIZE = 10;
 const SECONDARY_SIGNAL_THRESHOLD = 0.25;
 const SIGNALS = ['Investor access', 'Engineer talent', 'Research talent', 'Looking for a job', 'Sales pitch / noise'];
@@ -104,7 +103,6 @@ export function buildQuestions(events, rubricInput = []) {
 export function runModel() { return DEFAULT_MODEL; }
 export function supportedModels() { return [...SUPPORTED_MODELS]; }
 export function isSupportedModel(model) { return SUPPORTED_MODELS.includes(model); }
-export function maxRunsPerIpPerDay() { return MAX_RUNS_PER_IP_PER_DAY; }
 export function maxBatchSize() { return MAX_BATCH_SIZE; }
 export function endpoint(env) { return env.SF_SIGNAL_CLASSIFIER_ENDPOINT || ENDPOINT; }
 export function signals() { return SIGNALS; }
